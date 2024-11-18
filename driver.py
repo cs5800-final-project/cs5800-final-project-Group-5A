@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
         # Let the user select museums
         print("\nSelecting museums...")
-        selected_museums = user_select_museums(museum_data, num_museums=2)
+        selected_museums = user_select_museums(museum_data, 5)
         # print("Museums selected successfully!")
 
         # Load Airbnb data (assuming it's a CSV file with latitude and longitude columns)
@@ -113,8 +113,8 @@ if __name__ == "__main__":
         map_object.save("map.html")
 
         # Generate static map
-        print("\nGenerating static map...")
-        generate_static_map(selected_museums, optimal_airbnb, road_network)
+        # print("\nGenerating static map...")
+        # generate_static_map(selected_museums, optimal_airbnb, road_network)
     
     except Exception as e:
         print(f"Error: {e}")

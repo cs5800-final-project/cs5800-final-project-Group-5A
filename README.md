@@ -21,15 +21,9 @@ https://www.kaggle.com/datasets/vrindakallu/new-york-dataset
 
 
 Algorithms：
-以下两个算法都是用于find optimal airbnb，二选一即可。
 - dijkstra: 
     计算从不同airbnb分别到每个museum的最短距离，从而计算出总距离最短的那个就是要选择的airbnb。
-- greedy:
-    可以自选criteria是啥，最简易的就是按距离，进阶版的可以同时考虑价格、rating等。
-    算法好像比较简单粗暴：
-    Calculate the distance from each Airbnb to each museum.
-    Sum these distances for each Airbnb.
-    Select the Airbnb with the smallest total distance to all museums.
+
 
 
 这个作为optional的内容：
