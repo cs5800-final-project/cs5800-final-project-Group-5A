@@ -5,9 +5,12 @@ from picture_generator import *
 import pandas as pd
 import geopandas as gpd
 import osmnx as ox
+import heapq
+import score_system_utility as ssu
 
 MUSEUM_FILE_PATH = 'manhattan_ny_museums.csv'
 AIRBNB_FILE_PATH = 'new_york_airbnb_2024.csv'
+FELONY_FILE_PATH = 'NYPD_Felony_Complaint_Data_2023.csv'
 
 
 # Allow the user to select museums
@@ -39,7 +42,7 @@ def user_select_museums(museum_data, num_museums=5):
             print(f"Unexpected error: {e}. Try again.")
 
 
-def find_optimal_airbnb(airbnb_data, museum_data, road_network):
+def find_optimal_airbnb(airbnb_data, museum_data, road_network, rtree_index):
     adjacency_list = convert_to_adjacency_list(road_network)
     
     airbnb_nodes = [
@@ -52,11 +55,13 @@ def find_optimal_airbnb(airbnb_data, museum_data, road_network):
     # Compute total distance for each Airbnb
     optimal_airbnb = None
     min_total_distance = float('inf')
-    
     for airbnb, airbnb_node in zip(airbnb_data.to_dict('records'), airbnb_nodes):
         # Get shortest distances to museum nodes only
         shortest_distances = dijkstra(adjacency_list, airbnb_node, museum_nodes)
         total_distance = sum(shortest_distances.values())
+        
+        ssu.assign_distance(airbnb_data, airbnb['id'], total_distance)
+        ssu.assign_crime(airbnb_data, airbnb['id'], ssu.count_crimes_within_radius(rtree_index, airbnb['latitude'], airbnb['longitude'], 500))
         
         if total_distance < min_total_distance:
             min_total_distance = total_distance
@@ -75,6 +80,7 @@ def find_optimal_airbnb(airbnb_data, museum_data, road_network):
 if __name__ == "__main__":
     museum_file_path = MUSEUM_FILE_PATH
     airbnb_file_path = AIRBNB_FILE_PATH
+    felony_file_path = FELONY_FILE_PATH
     
     try:
         # Load museum data
@@ -89,15 +95,20 @@ if __name__ == "__main__":
 
         # Load Airbnb data (assuming it's a CSV file with latitude and longitude columns)
         print("\nLoading Airbnb data...")
-        airbnb_data = pd.read_csv(airbnb_file_path)
+        airbnb_data = load_airbnb_data(airbnb_file_path)
         
         # Load road network using OSMnx
         print("\nLoading road network...")
         road_network = ox.graph_from_place("Manhattan, New York, USA", network_type="drive")
         
+        # Load crime data
+        print("\nLoading crime data...")
+        crime_data = load_felony_data(felony_file_path)
+        rtree_index = ssu.build_rtree_index(crime_data)
+
         # Find the optimal Airbnb
         print("\nFinding the optimal Airbnb...")
-        result = find_optimal_airbnb(airbnb_data, selected_museums, road_network)
+        result = find_optimal_airbnb(airbnb_data, selected_museums, road_network, rtree_index)
         # Print only the required details
         optimal_airbnb = result['optimal_airbnb']
         print(f"Optimal Airbnb:")
@@ -106,6 +117,15 @@ if __name__ == "__main__":
         print(f"Latitude: {optimal_airbnb['latitude']}")
         print(f"Longitude: {optimal_airbnb['longitude']}")
         print(f"Total Distance: {result['total_distance']} meters")
+
+        # Sort Airbnb data by score system
+        ssu.assign_rating_score(airbnb_data)
+        ssu.assign_distance_score(airbnb_data)
+        ssu.assign_crime_score(airbnb_data)
+        ssu.assign_overall_score(airbnb_data, 50, 40, 10)
+        new_airbnb_data = airbnb_data.sort_values(by='overall_score', ascending=False)
+        new_airbnb_data = new_airbnb_data[['id', 'rating', 'crime', 'distance', 'overall_score']]
+        print(new_airbnb_data.head())
 
         # Generate the map
         print("\nGenerating map...")
