@@ -45,6 +45,7 @@ def user_select_museums(museum_data, num_museums=5):
 def find_optimal_airbnb(airbnb_data, museum_data, road_network, rtree_index):
     adjacency_list = convert_to_adjacency_list(road_network)
     
+    # Find the nearest node in the road network for each Airbnb and museum
     airbnb_nodes = [
         ox.distance.nearest_nodes(road_network, row['longitude'], row['latitude']) for _, row in airbnb_data.iterrows()
     ]
@@ -54,7 +55,7 @@ def find_optimal_airbnb(airbnb_data, museum_data, road_network, rtree_index):
     
     # Compute total distance for each Airbnb
     optimal_airbnb = None
-    min_total_distance = float('inf')
+    min_total_distance = float('inf') # Initialize with infinity
     for airbnb, airbnb_node in zip(airbnb_data.to_dict('records'), airbnb_nodes):
         # Get shortest distances to museum nodes only
         shortest_distances = dijkstra(adjacency_list, airbnb_node, museum_nodes)
@@ -131,6 +132,7 @@ if __name__ == "__main__":
         print("\nGenerating map...")
         map_object = generate_map(selected_museums, optimal_airbnb, road_network)
         map_object.save("map.html")
+        print("Map generated successfully!")
 
         # Generate static map
         # print("\nGenerating static map...")
