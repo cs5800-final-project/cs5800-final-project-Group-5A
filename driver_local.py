@@ -95,12 +95,8 @@ def find_optimal_airbnb_bellman_ford(airbnb_data, museum_data, road_network, rtr
     optimal_airbnb = None
     min_total_distance = float('inf') # Initialize with infinity
     current = time.time()
-    i = 1
     for airbnb, airbnb_node in zip(airbnb_data.to_dict('records'), airbnb_nodes):
         # Get shortest distances to museum nodes only
-        print(f"Airbnb id: {airbnb['id']}")
-        print("processing: ", i, "out of ", len(airbnb_nodes))
-        i = i + 1
         edge_list = bf.adjacency_list_to_edge_list(adjacency_list)
         shortest_distances = bf.bellman_ford(adjacency_list, edge_list, airbnb_node, museum_nodes)
         total_distance = sum(shortest_distances.values())
