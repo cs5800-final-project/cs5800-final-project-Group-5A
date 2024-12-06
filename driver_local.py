@@ -9,6 +9,7 @@ import heapq
 import score_system_utility as ssu
 import json as js
 import time
+import bellman_ford as bf
 
 MUSEUM_FILE_PATH = 'manhattan_ny_museums.csv'
 AIRBNB_FILE_PATH = 'new_york_airbnb_2024.csv'
@@ -81,6 +82,46 @@ def find_optimal_airbnb(airbnb_data, museum_data, road_network, rtree_index):
 
     return {"optimal_airbnb": result_airbnb, "total_distance": min_total_distance}
 
+def find_optimal_airbnb_bellman_ford(airbnb_data, museum_data, road_network, rtree_index):
+    adjacency_list = convert_to_adjacency_list(road_network)
+    
+    # Find the nearest node in the road network for each Airbnb and museum
+    airbnb_nodes = js.load(open(AIREBNB_NODES_FILE_PATH, "r"))
+    museum_nodes = [
+        ox.distance.nearest_nodes(road_network, row['lon'], row['lat']) for _, row in museum_data.iterrows()
+    ]
+    
+    # Compute total distance for each Airbnb
+    optimal_airbnb = None
+    min_total_distance = float('inf') # Initialize with infinity
+    current = time.time()
+    i = 1
+    for airbnb, airbnb_node in zip(airbnb_data.to_dict('records'), airbnb_nodes):
+        # Get shortest distances to museum nodes only
+        print(f"Airbnb id: {airbnb['id']}")
+        print("processing: ", i, "out of ", len(airbnb_nodes))
+        i = i + 1
+        edge_list = bf.adjacency_list_to_edge_list(adjacency_list)
+        shortest_distances = bf.bellman_ford(adjacency_list, edge_list, airbnb_node, museum_nodes)
+        total_distance = sum(shortest_distances.values())
+        
+        ssu.assign_distance(airbnb_data, airbnb['id'], total_distance)
+        ssu.assign_crime(airbnb_data, airbnb['id'], ssu.count_crimes_within_radius(rtree_index, airbnb['latitude'], airbnb['longitude'], 500))
+        
+        if total_distance < min_total_distance:
+            min_total_distance = total_distance
+            optimal_airbnb = airbnb
+    print(f"Time taken to find optimal airbnb using bf: {time.time() - current:.2f}")
+    # Extract only the required fields for the result
+    result_airbnb = {
+        "id": optimal_airbnb["id"],
+        "name": optimal_airbnb.get("name", "N/A"),  # If "name" is not in the data, return "N/A"
+        "longitude": optimal_airbnb["longitude"],
+        "latitude": optimal_airbnb["latitude"]
+    }
+
+    return {"optimal_airbnb": result_airbnb, "total_distance": min_total_distance}
+
 if __name__ == "__main__":
     museum_file_path = MUSEUM_FILE_PATH
     airbnb_file_path = AIRBNB_FILE_PATH
@@ -113,6 +154,17 @@ if __name__ == "__main__":
         # Find the optimal Airbnb
         print("\nFinding the optimal Airbnb...")
         result = find_optimal_airbnb(airbnb_data, selected_museums, road_network, rtree_index)
+        # Print only the required details
+        optimal_airbnb = result['optimal_airbnb']
+        print(f"Optimal Airbnb:")
+        print(f"Airbnb id: {optimal_airbnb['id']}")
+        print(f"Name: {optimal_airbnb['name']}")
+        print(f"Latitude: {optimal_airbnb['latitude']}")
+        print(f"Longitude: {optimal_airbnb['longitude']}")
+        print(f"Total Distance: {result['total_distance']} meters")
+
+        print("\nFinding the optimal Airbnb with bf...")
+        result = find_optimal_airbnb_bellman_ford(airbnb_data, selected_museums, road_network, rtree_index)
         # Print only the required details
         optimal_airbnb = result['optimal_airbnb']
         print(f"Optimal Airbnb:")
