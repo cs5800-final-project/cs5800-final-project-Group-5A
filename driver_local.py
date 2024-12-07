@@ -10,12 +10,45 @@ import score_system_utility as ssu
 import json as js
 import time
 import bellman_ford as bf
+import itertools
 
 MUSEUM_FILE_PATH = 'manhattan_ny_museums.csv'
 AIRBNB_FILE_PATH = 'new_york_airbnb_2024.csv'
 FELONY_FILE_PATH = 'NYPD_Felony_Complaint_Data_2023.csv'
 AIREBNB_NODES_FILE_PATH = 'airbnb_nodes.json'
 NETWORK_FILE_PATH = 'manhattan_road_network.graphml'
+
+def bruteforce_shortest_path(airbnb_data, museum_data):
+    preload = js.load(open('shortest_distances.json', 'r'))
+    airbnb_nodes = js.load(open(AIREBNB_NODES_FILE_PATH, "r"))
+    museum_nodes = [
+        ox.distance.nearest_nodes(road_network, row['lon'], row['lat']) for _, row in museum_data.iterrows()
+    ]
+    perm_list = list(itertools.permutations(museum_nodes))
+    min_total_distance = float('inf')
+    optimal_airbnb = None
+    current = time.time()
+    for airbnb, airbnb_node in zip(airbnb_data.to_dict('records'), airbnb_nodes):
+        for perm in perm_list:
+            total_distance = 0
+            for i in range(len(perm) - 2):
+                total_distance += preload.get(str(perm[i]), {}).get(str(perm[i + 1]), float('inf'))
+            total_distance += preload.get(str(airbnb_node), {}).get(str(perm[0]), float('inf'))
+            total_distance += preload.get(str(airbnb_node), {}).get(str(perm[-1]), float('inf'))
+            if total_distance < min_total_distance:
+                min_total_distance = total_distance
+                optimal_airbnb = airbnb
+    result_airbnb = {
+    "id": optimal_airbnb["id"],
+    "name": optimal_airbnb.get("name", "N/A"),  # If "name" is not in the data, return "N/A"
+    "longitude": optimal_airbnb["longitude"],
+    "latitude": optimal_airbnb["latitude"]
+    }
+    print(f"Time taken to find optimal airbnb with brute force: {time.time() - current:.2f}")
+
+    return {"optimal_airbnb": result_airbnb, "total_distance": min_total_distance}
+
+
 
 
 # Allow the user to select museums
@@ -210,6 +243,17 @@ if __name__ == "__main__":
         
         print("\nFinding the optimal Airbnb with preload data...")
         result = find_optimal_airbnb_preload(airbnb_data, selected_museums, road_network, rtree_index)
+        # Print only the required details
+        optimal_airbnb = result['optimal_airbnb']
+        print(f"Optimal Airbnb:")
+        print(f"Airbnb id: {optimal_airbnb['id']}")
+        print(f"Name: {optimal_airbnb['name']}")
+        print(f"Latitude: {optimal_airbnb['latitude']}")
+        print(f"Longitude: {optimal_airbnb['longitude']}")
+        print(f"Total Distance: {result['total_distance']} meters")
+
+        print("\nFinding the optimal Airbnb with TSP brute force...")
+        result = bruteforce_shortest_path(airbnb_data, selected_museums)
         # Print only the required details
         optimal_airbnb = result['optimal_airbnb']
         print(f"Optimal Airbnb:")
