@@ -1,5 +1,5 @@
 import pandas as pd
-import geopandas as gpd
+# import geopandas as gpd
 import score_system_utility as ssu
 
 def load_airbnb_data(file_path):

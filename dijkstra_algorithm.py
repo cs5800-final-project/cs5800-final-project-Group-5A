@@ -15,7 +15,7 @@ def convert_to_adjacency_list(ROAD_NETWORK) -> dict:
             adjacency_list[node][neighbor] = weight
     return adjacency_list
 
-adjacency_list = convert_to_adjacency_list(ROAD_NETWORK)
+# adjacency_list = convert_to_adjacency_list(ROAD_NETWORK)
 
 # Implement Dijkstra algorithm
 def dijkstra(adjacency_list, start_node, target_nodes) -> dict:

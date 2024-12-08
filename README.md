@@ -18,14 +18,3 @@ data sources:
 
 2. NYC airbnb open data
 https://www.kaggle.com/datasets/vrindakallu/new-york-dataset
-
-
-Algorithms：
-- dijkstra: 
-    计算从不同airbnb分别到每个museum的最短距离，从而计算出总距离最短的那个就是要选择的airbnb。
-
-
-
-这个作为optional的内容：
-- MST(Kruskal/prim):
-    假设一天之中打算逛完n个museum，计算从airbnb出发、陆续到达n个museum、返回airbnb的最短总路径。
