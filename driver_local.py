@@ -1,7 +1,7 @@
 from data_loader import *
 from dijkstra_algorithm import *
 from map_generator import *
-from picture_generator import *
+# from picture_generator import *
 import pandas as pd
 import geopandas as gpd
 import osmnx as ox
