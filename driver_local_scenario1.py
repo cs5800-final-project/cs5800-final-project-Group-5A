@@ -1,3 +1,9 @@
+'''
+This is the driver script for the scenario 1.
+All data are loaded from the local files (the data folder) to speed up the process.
+All three algorithms are included here for running time comparison.
+'''
+
 from data_loader import *
 from algorithm_1_dijkstra import *
 from map_generator import *

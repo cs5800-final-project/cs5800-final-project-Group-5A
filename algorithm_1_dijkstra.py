@@ -1,15 +1,19 @@
+'''
+This is implementation of Dijkstra algorithm.
+'''
+
 import osmnx as ox
 import heapq
 
 # Load the road network of Manhattan
-ROAD_NETWORK = ox.graph_from_place("Manhattan, New York, USA", network_type="drive")
+# ROAD_NETWORK = ox.graph_from_place("Manhattan, New York, USA", network_type="drive")
 
 # Convert OSMnx graph to adjacency list
-def convert_to_adjacency_list(ROAD_NETWORK) -> dict:
+def convert_to_adjacency_list(road_network) -> dict:
     adjacency_list = {}
-    for node in ROAD_NETWORK.nodes:
+    for node in road_network.nodes:
         adjacency_list[node] = {}
-        for neighbor, data in ROAD_NETWORK[node].items():
+        for neighbor, data in road_network[node].items():
             edge_data = list(data.values())[0]
             weight = edge_data.get('length', 1)
             adjacency_list[node][neighbor] = weight

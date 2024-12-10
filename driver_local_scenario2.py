@@ -1,3 +1,7 @@
+'''
+This is the driver script for the scenario 2.
+'''
+
 from data_loader import *
 from algorithm_1_dijkstra import *
 from map_generator import *
@@ -9,7 +13,6 @@ import itertools
 
 MUSEUM_FILE_PATH = 'data/manhattan_ny_museums.csv'
 AIRBNB_FILE_PATH = 'data/new_york_airbnb_2024.csv'
-FELONY_FILE_PATH = 'data/NYPD_Felony_Complaint_Data_2023.csv'
 AIRBNB_NODES_FILE_PATH = 'data/airbnb_nodes.json'
 NETWORK_FILE_PATH = 'data/manhattan_road_network.graphml'
 SHORTEST_DISTANCES_FILE_PATH = 'data/shortest_distances.json'
@@ -44,7 +47,7 @@ def user_select_museums(museum_data, num_museums=5):
             print(f"Unexpected error: {e}. Try again.")
 
 
-def find_optimal_airbnb_preload(airbnb_data, museum_data, road_network, rtree_index):
+def find_optimal_airbnb_preload(airbnb_data, museum_data, road_network):
     current = time.time()
     preload = js.load(open(SHORTEST_DISTANCES_FILE_PATH, 'r'))
     
@@ -126,14 +129,9 @@ if __name__ == "__main__":
         # Load road network using OSMnx
         print("\nLoading road network...")
         road_network = ox.load_graphml(NETWORK_FILE_PATH)
-        
-        # Load crime data
-        print("\nLoading crime data...")
-        crime_data = load_felony_data(FELONY_FILE_PATH)
-        rtree_index = ssu.build_rtree_index(crime_data)
 
         print("\nFinding the optimal Airbnb with preload data...")
-        result = find_optimal_airbnb_preload(airbnb_data, selected_museums, road_network, rtree_index)
+        result = find_optimal_airbnb_preload(airbnb_data, selected_museums, road_network)
         # Print only the required details
         optimal_airbnb = result['optimal_airbnb']
         print(f"Optimal Airbnb:")

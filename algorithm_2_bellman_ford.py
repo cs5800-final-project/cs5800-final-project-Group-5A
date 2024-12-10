@@ -1,3 +1,7 @@
+'''
+This is the implementation of the Bellman-Ford algorithm.
+'''
+
 def adjacency_list_to_edge_list(adjacency_list):
     """
     Convert an adjacency list to an edge list.
@@ -40,19 +44,3 @@ def bellman_ford(adjacency_list, edge_list, source, destinations):
     for node in destinations:
         shortest_distances[node] = distances[node]
     return shortest_distances # Return the shortest distances to all destination nodes
-
-'''
-if __name__ == "__main__":
-    # Load the road network of Manhattan
-    adjacency_list = {
-        0: {1: 1, 2: 4},
-        1: {2: 2},
-        2: {3: 1},
-        3: {1: 3}
-    }
-
-    source = 0
-    destinations = [1, 2, 3]
-    shortest_distances = bellman_ford(adjacency_list, source, destinations)
-    print(shortest_distances)
-'''
