@@ -1,12 +1,12 @@
 from data_loader import *
-from dijkstra_algorithm import *
+from algorithm_1_dijkstra import *
 from map_generator import *
 import osmnx as ox
 import score_system_utility as ssu
 import json as js
 import time
-import bellman_ford as bf
-from floyd_warshall_algorithm import *
+import algorithm_2_bellman_ford as bf
+from algorithm_3_floyd_warshall import *
 
 MUSEUM_FILE_PATH = 'data/manhattan_ny_museums.csv'
 AIRBNB_FILE_PATH = 'data/new_york_airbnb_2024.csv'

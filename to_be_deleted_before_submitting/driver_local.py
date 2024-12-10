@@ -1,5 +1,5 @@
 from data_loader import *
-from dijkstra_algorithm import *
+from algorithm_1_dijkstra import *
 from map_generator import *
 # from picture_generator import *
 import pandas as pd
@@ -9,7 +9,7 @@ import heapq
 import score_system_utility as ssu
 import json as js
 import time
-import bellman_ford as bf
+import algorithm_2_bellman_ford as bf
 import itertools
 
 MUSEUM_FILE_PATH = 'manhattan_ny_museums.csv'

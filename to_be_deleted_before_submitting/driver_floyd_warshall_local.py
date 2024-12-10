@@ -1,5 +1,5 @@
 from data_loader import *
-from floyd_warshall_algorithm import *
+from algorithm_3_floyd_warshall import *
 from map_generator import *
 from picture_generator import *
 import pandas as pd

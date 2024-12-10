@@ -1,5 +1,5 @@
 from data_loader import *
-from dijkstra_algorithm import *
+from algorithm_1_dijkstra import *
 from map_generator import *
 from picture_generator import *
 import pandas as pd

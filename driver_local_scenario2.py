@@ -1,5 +1,5 @@
 from data_loader import *
-from dijkstra_algorithm import *
+from algorithm_1_dijkstra import *
 from map_generator import *
 import osmnx as ox
 import score_system_utility as ssu
@@ -67,7 +67,6 @@ def find_optimal_airbnb_preload(airbnb_data, museum_data, road_network, rtree_in
         if shortest_distances < min_total_distance:
             min_total_distance = shortest_distances
             optimal_airbnb = airbnb
-    print(f"Time taken to find the optimal airbnb with preload data: {time.time() - current:.2f} seconds")
     # Extract only the required fields for the result
     result_airbnb = {
         "id": optimal_airbnb["id"],
@@ -75,7 +74,7 @@ def find_optimal_airbnb_preload(airbnb_data, museum_data, road_network, rtree_in
         "longitude": optimal_airbnb["longitude"],
         "latitude": optimal_airbnb["latitude"]
     }
-
+    print(f"Time taken to find the optimal airbnb with preload data: {time.time() - current:.2f} seconds")
     return {"optimal_airbnb": result_airbnb, "total_distance": min_total_distance}
 
 
@@ -132,7 +131,7 @@ if __name__ == "__main__":
         print("\nLoading crime data...")
         crime_data = load_felony_data(FELONY_FILE_PATH)
         rtree_index = ssu.build_rtree_index(crime_data)
-        
+
         print("\nFinding the optimal Airbnb with preload data...")
         result = find_optimal_airbnb_preload(airbnb_data, selected_museums, road_network, rtree_index)
         # Print only the required details
