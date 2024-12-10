@@ -90,7 +90,7 @@ def main():
 
     print(f"Time taken to build shortest distances: {time.time() - current:.2f}")
 
-    js.dump(adjacency_list_all, open('shortest_distances.json', 'w'))
+    js.dump(adjacency_list_all, open('data/shortest_distances.json', 'w'))
 
 if __name__ == "__main__":
     main()
