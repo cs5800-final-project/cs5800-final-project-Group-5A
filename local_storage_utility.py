@@ -17,4 +17,4 @@ airbnb_nodes = [
         ox.distance.nearest_nodes(ROAD_NETWORK, row['longitude'], row['latitude']) for _, row in airbnb_data.iterrows()
     ]
 
-js.dump(airbnb_nodes, open("airbnb_nodes.json", "w"))
+js.dump(airbnb_nodes, open("data/airbnb_nodes.json", "w"))
