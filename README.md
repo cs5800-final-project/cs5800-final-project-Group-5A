@@ -4,6 +4,15 @@ Local data is stored in the data folder
 **Note:**
 Since the json file that stores all the distances is relatively big that requires Git Large File Storage to handle, in the case you don't want to bother with git lfs, rerun the utility file **shortest_path_for_all_nodes.py** to regenerate the cached shortest distances. It should only take seconds to put the file the data folder. 
 
+## Dependencies
+The following files rely on the following package:
+-	pandas
+-	osmnx
+-	heapq
+-	time
+-	rtree
+-	json
+
 ## Files to run
 **driver_local_scenario1.py:**
 1. This file corresponds Scenario 1 in the report. 
