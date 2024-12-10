@@ -163,12 +163,14 @@ if __name__ == "__main__":
         find_optimal_airbnb_dijkstra(airbnb_data, selected_museums, road_network, rtree_index)
 
         # Find the optimal Airbnb using Bellman-Ford algorithm
-        print("\nFinding the optimal Airbnbs using Bellman-Ford...")
-        find_optimal_airbnb_bellman_ford(airbnb_data, selected_museums, road_network, rtree_index)
+        # uncomment this block to run Bellman-Ford algorithm
+        # print("\nFinding the optimal Airbnbs using Bellman-Ford...")
+        # find_optimal_airbnb_bellman_ford(airbnb_data, selected_museums, road_network, rtree_index)
         
         # Find the optimal Airbnb using Floyd-Warshall algorithm
-        print("\nFinding the optimal Airbnbs using Floyd-Warshall...")
-        find_optimal_airbnb_floyd_warshall(airbnb_data, selected_museums, road_network, rtree_index)
+        # uncomment this block to run Floyd-Warshall algorithm
+        # print("\nFinding the optimal Airbnbs using Floyd-Warshall...")
+        # find_optimal_airbnb_floyd_warshall(airbnb_data, selected_museums, road_network, rtree_index)
         
     
     except Exception as e:
