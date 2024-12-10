@@ -4,9 +4,9 @@ import data_loader as dl
 import time
 import json as js
 
-AIREBNB_NODES_FILE_PATH = 'airbnb_nodes.json'
-NETWORK_FILE_PATH = 'manhattan_road_network.graphml'
-MUSEUM_FILE_PATH = 'manhattan_ny_museums.csv'
+AIREBNB_NODES_FILE_PATH = 'data/airbnb_nodes.json'
+NETWORK_FILE_PATH = 'data/manhattan_road_network.graphml'
+MUSEUM_FILE_PATH = 'data/manhattan_ny_museums.csv'
 
 # Convert OSMnx graph to adjacency list
 def convert_to_adjacency_list(ROAD_NETWORK) -> dict:
