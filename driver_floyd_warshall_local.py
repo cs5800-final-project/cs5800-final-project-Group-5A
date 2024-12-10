@@ -143,12 +143,7 @@ if __name__ == "__main__":
         map_object = generate_map(selected_museums, optimal_airbnb, road_network)
         map_object.save("map.html")
         print("Map generated successfully!")
-
-        # Generate static map
-        # print("\nGenerating static map...")
-        # generate_static_map(selected_museums, optimal_airbnb, road_network)
         
-    
     except Exception as e:
         print(f"Error: {e}")
    
