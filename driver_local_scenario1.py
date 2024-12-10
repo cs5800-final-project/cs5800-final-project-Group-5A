@@ -96,7 +96,7 @@ def find_optimal_airbnb_bellman_ford(airbnb_data, museum_data, road_network, rtr
 
 def find_optimal_airbnb_floyd_warshall(airbnb_data, museum_data, road_network, rtree_index):
     adjacency_list = convert_to_adjacency_list(road_network)
-
+    current = time.time()
     print("Computing all-pairs shortest paths using Floyd-Warshall...")
     # Compute all-pairs shortest paths using Floyd-Warshall
     all_pairs_shortest_paths = floyd_warshall(adjacency_list)
@@ -107,7 +107,6 @@ def find_optimal_airbnb_floyd_warshall(airbnb_data, museum_data, road_network, r
         ox.distance.nearest_nodes(road_network, row['lon'], row['lat']) for _, row in museum_data.iterrows()
     ]
     
-    current = time.time()
     for airbnb, airbnb_node in zip(airbnb_data.to_dict('records'), airbnb_nodes):
         # Get shortest distances to museum nodes only
         total_distance = sum(all_pairs_shortest_paths[airbnb_node][museum_node] for museum_node in museum_nodes)
