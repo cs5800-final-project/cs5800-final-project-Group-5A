@@ -6,7 +6,6 @@ All three algorithms are included here for running time comparison.
 
 from data_loader import *
 from algorithm_1_dijkstra import *
-from map_generator import *
 import osmnx as ox
 import score_system_utility as ssu
 import json as js
@@ -171,12 +170,6 @@ if __name__ == "__main__":
         # Find the optimal Airbnb using Floyd-Warshall algorithm
         print("\nFinding the optimal Airbnbs using Floyd-Warshall...")
         find_optimal_airbnb_floyd_warshall(airbnb_data, selected_museums, road_network, rtree_index)
-
-        # Generate the map
-        # print("\nGenerating map...")
-        # map_object = generate_map(selected_museums, optimal_airbnb, road_network)
-        # map_object.save("map.html")
-        # print("Map generated successfully!")
         
     
     except Exception as e:

@@ -1,6 +1,6 @@
 from data_loader import *
 from algorithm_1_dijkstra import *
-from map_generator import *
+from to_be_deleted_before_submitting.map_generator import *
 # from picture_generator import *
 import pandas as pd
 import geopandas as gpd

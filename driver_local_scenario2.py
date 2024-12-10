@@ -4,9 +4,7 @@ This is the driver script for the scenario 2.
 
 from data_loader import *
 from algorithm_1_dijkstra import *
-from map_generator import *
 import osmnx as ox
-import score_system_utility as ssu
 import json as js
 import time
 import itertools
@@ -151,12 +149,6 @@ if __name__ == "__main__":
         print(f"Latitude: {optimal_airbnb['latitude']}")
         print(f"Longitude: {optimal_airbnb['longitude']}")
         print(f"Total Distance: {result['total_distance']} meters")
-
-        # Generate the map
-        # print("\nGenerating map...")
-        # map_object = generate_map(selected_museums, optimal_airbnb, road_network)
-        # map_object.save("map.html")
-        # print("Map generated successfully!")
         
     
     except Exception as e:
