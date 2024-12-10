@@ -1,6 +1,8 @@
+'''
+This file contains functions to load data from csv files.
+'''
+
 import pandas as pd
-# import geopandas as gpd
-import score_system_utility as ssu
 
 def load_airbnb_data(file_path):
     airbnb_data = pd.read_csv(file_path)
@@ -28,16 +30,3 @@ def load_felony_data(file_path):
     crime_data = crime_data[['CMPLNT_NUM', 'Latitude', 'Longitude', 'Lat_Lon']]
     return crime_data[['CMPLNT_NUM', 'Latitude', 'Longitude', 'Lat_Lon']]
 
-# def main():
-#     # print("Loading Airbnb data...")
-#     # airbnb_data = load_airbnb_data('new_york_airbnb_2024.csv')
-#     # print("Airbnb Data Loaded Successfully!")
-#     # print(airbnb_data.head())  # Preview the first 5 rows
-
-#     print("\nLoading Museum data...")
-#     museum_data = load_museum_data('manhattan_ny_museums.csv')
-#     print("Museum Data Loaded Successfully!")
-#     print(museum_data.head())  # Preview the first 5 rows
-
-# if __name__ == "__main__":
-#     main()

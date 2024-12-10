@@ -1,3 +1,7 @@
+'''
+This file generates a map containing the selected museums, the optimal Airbnb, and the shortest paths between them.
+'''
+
 import folium
 from folium.plugins import MarkerCluster
 import osmnx as ox

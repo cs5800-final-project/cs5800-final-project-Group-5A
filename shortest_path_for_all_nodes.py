@@ -1,3 +1,8 @@
+'''
+This script uses Dijkstra's algorithm to calculate the shortest path between all Airbnb nodes and museum nodes in Manhattan.
+The result is stored in a JSON file as 'shortest_distances.json' in the 'data' folder.
+'''
+
 import osmnx as ox
 import heapq
 import data_loader as dl

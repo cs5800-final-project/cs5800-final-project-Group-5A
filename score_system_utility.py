@@ -1,3 +1,7 @@
+'''
+This file contains utility functions for the scoring system.
+'''
+
 import math
 import rtree as rt
 import pandas as pd

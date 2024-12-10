@@ -1,3 +1,7 @@
+'''
+This file loaded the road network of Manhattan and the nodes of Airbnb data, and saves them as local files in the 'data' folder.
+'''
+
 import osmnx as ox
 import data_loader as dl
 import json as js
