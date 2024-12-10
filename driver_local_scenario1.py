@@ -13,7 +13,6 @@ AIRBNB_FILE_PATH = 'data/new_york_airbnb_2024.csv'
 FELONY_FILE_PATH = 'data/NYPD_Felony_Complaint_Data_2023.csv'
 AIRBNB_NODES_FILE_PATH = 'data/airbnb_nodes.json'
 NETWORK_FILE_PATH = 'data/manhattan_road_network.graphml'
-SHORTEST_DISTANCES_FILE_PATH = 'data/shortest_distances.json'
 
 
 # Allow the user to select museums
@@ -64,7 +63,7 @@ def find_optimal_airbnb_dijkstra(airbnb_data, museum_data, road_network, rtree_i
         ssu.assign_distance(airbnb_data, airbnb['id'], total_distance)
         ssu.assign_crime(airbnb_data, airbnb['id'], ssu.count_crimes_within_radius(rtree_index, airbnb['latitude'], airbnb['longitude'], 500))
     score_and_rank_airbnbs(airbnb_data)
-    print(f"Time taken to find optimal airbnb using Dijkstra: {time.time() - current:.2f} seconds")
+    print(f"Time taken to find optimal airbnbs using Dijkstra: {time.time() - current:.2f} seconds")
 
 
 def find_optimal_airbnb_bellman_ford(airbnb_data, museum_data, road_network, rtree_index):
@@ -87,7 +86,7 @@ def find_optimal_airbnb_bellman_ford(airbnb_data, museum_data, road_network, rtr
         ssu.assign_distance(airbnb_data, airbnb['id'], total_distance)
         ssu.assign_crime(airbnb_data, airbnb['id'], ssu.count_crimes_within_radius(rtree_index, airbnb['latitude'], airbnb['longitude'], 500))
     score_and_rank_airbnbs(airbnb_data)
-    print(f"Time taken to find optimal airbnb using Bellman-Ford: {time.time() - current:.2f} seconds")
+    print(f"Time taken to find optimal airbnbs using Bellman-Ford: {time.time() - current:.2f} seconds")
 
 
 def find_optimal_airbnb_floyd_warshall(airbnb_data, museum_data, road_network, rtree_index):
@@ -111,7 +110,7 @@ def find_optimal_airbnb_floyd_warshall(airbnb_data, museum_data, road_network, r
         ssu.assign_distance(airbnb_data, airbnb['id'], total_distance)
         ssu.assign_crime(airbnb_data, airbnb['id'], ssu.count_crimes_within_radius(rtree_index, airbnb['latitude'], airbnb['longitude'], 500))
     score_and_rank_airbnbs(airbnb_data)    
-    print(f"Time taken to find optimal airbnb using Floyd-Warshall: {time.time() - current:.2f} seconds")
+    print(f"Time taken to find optimal airbnbs using Floyd-Warshall: {time.time() - current:.2f} seconds")
 
 
 def score_and_rank_airbnbs(airbnb_data, distance_weight=50, crime_weight=40, rating_weight=10, top_n=3):
