@@ -46,8 +46,10 @@ def assign_rating_score(airbnb_data):
             airbnb_data.loc[index, 'rating_score'] = 60
         elif row['rating'] >= q25:
             airbnb_data.loc[index, 'rating_score'] = 40
-        else:
+        elif row['rating'] == min_rating:
             airbnb_data.loc[index, 'rating_score'] = 0
+        else:
+            airbnb_data.loc[index, 'rating_score'] = 20
     
 def assign_distance(airbnb_data, id, distance):
     airbnb_data.loc[airbnb_data['id'] == id, 'distance'] = distance
@@ -67,13 +69,13 @@ def assign_distance_score(airbnb_data):
         if row['distance'] == max_distance:
             airbnb_data.loc[index, 'distance_score'] = 0
         elif row['distance'] >= q75:
-            airbnb_data.loc[index, 'distance_score'] = 10
+            airbnb_data.loc[index, 'distance_score'] = 20
         elif row['distance'] >= q50:
             airbnb_data.loc[index, 'distance_score'] = 40
         elif row['distance'] >= q25:
             airbnb_data.loc[index, 'distance_score'] = 60
         elif row['distance'] != min_distance:
-            airbnb_data.loc[index, 'distance_score'] = 70
+            airbnb_data.loc[index, 'distance_score'] = 80
         else:
             airbnb_data.loc[index, 'distance_score'] = 100
 
@@ -93,14 +95,16 @@ def assign_crime_score(airbnb_data):
     for index, row in airbnb_data.iterrows():
         if row['crime'] == max_crime:
             airbnb_data.loc[index, 'crime_score'] = 0
-        elif row['crime'] >= q75:
-            airbnb_data.loc[index, 'crime_score'] = 40
-        elif row['crime'] >= q50:
-            airbnb_data.loc[index, 'crime_score'] = 60
-        elif row['crime'] >= q25:
-            airbnb_data.loc[index, 'crime_score'] = 80
-        else:
+        elif row['crime'] == min_crime:
             airbnb_data.loc[index, 'crime_score'] = 100
+        elif row['crime'] >= q75:
+            airbnb_data.loc[index, 'crime_score'] = 20
+        elif row['crime'] >= q50:
+            airbnb_data.loc[index, 'crime_score'] = 40
+        elif row['crime'] >= q25:
+            airbnb_data.loc[index, 'crime_score'] = 60
+        else:
+            airbnb_data.loc[index, 'crime_score'] = 80
 
 def assign_overall_score(airbnb_data, distance_weight, crime_weight, rating_weight):
     for index, row in airbnb_data.iterrows():
