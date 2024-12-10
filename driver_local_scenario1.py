@@ -6,7 +6,7 @@ import score_system_utility as ssu
 import json as js
 import time
 import bellman_ford as bf
-import itertools
+from floyd_warshall_algorithm import *
 
 MUSEUM_FILE_PATH = 'data/manhattan_ny_museums.csv'
 AIRBNB_FILE_PATH = 'data/new_york_airbnb_2024.csv'
@@ -64,7 +64,7 @@ def find_optimal_airbnb_dijkstra(airbnb_data, museum_data, road_network, rtree_i
         ssu.assign_distance(airbnb_data, airbnb['id'], total_distance)
         ssu.assign_crime(airbnb_data, airbnb['id'], ssu.count_crimes_within_radius(rtree_index, airbnb['latitude'], airbnb['longitude'], 500))
     score_and_rank_airbnbs(airbnb_data)
-    print(f"Time taken to find optimal airbnb: {time.time() - current:.2f} seconds")
+    print(f"Time taken to find optimal airbnb using Dijkstra: {time.time() - current:.2f} seconds")
 
 
 def find_optimal_airbnb_bellman_ford(airbnb_data, museum_data, road_network, rtree_index):
@@ -77,8 +77,6 @@ def find_optimal_airbnb_bellman_ford(airbnb_data, museum_data, road_network, rtr
     ]
     
     # Compute total distance for each Airbnb
-    optimal_airbnb = None
-    min_total_distance = float('inf') # Initialize with infinity
     current = time.time()
     for airbnb, airbnb_node in zip(airbnb_data.to_dict('records'), airbnb_nodes):
         # Get shortest distances to museum nodes only
@@ -88,11 +86,32 @@ def find_optimal_airbnb_bellman_ford(airbnb_data, museum_data, road_network, rtr
         
         ssu.assign_distance(airbnb_data, airbnb['id'], total_distance)
         ssu.assign_crime(airbnb_data, airbnb['id'], ssu.count_crimes_within_radius(rtree_index, airbnb['latitude'], airbnb['longitude'], 500))
+    score_and_rank_airbnbs(airbnb_data)
+    print(f"Time taken to find optimal airbnb using Bellman-Ford: {time.time() - current:.2f} seconds")
+
+
+def find_optimal_airbnb_floyd_warshall(airbnb_data, museum_data, road_network, rtree_index):
+    adjacency_list = convert_to_adjacency_list(road_network)
+
+    print("Computing all-pairs shortest paths using Floyd-Warshall...")
+    # Compute all-pairs shortest paths using Floyd-Warshall
+    all_pairs_shortest_paths = floyd_warshall(adjacency_list)
+    print("All-pairs shortest paths computed successfully!")
+    # Find the nearest node in the road network for each Airbnb and museum
+    airbnb_nodes = js.load(open(AIRBNB_NODES_FILE_PATH, "r"))
+    museum_nodes = [
+        ox.distance.nearest_nodes(road_network, row['lon'], row['lat']) for _, row in museum_data.iterrows()
+    ]
+    
+    current = time.time()
+    for airbnb, airbnb_node in zip(airbnb_data.to_dict('records'), airbnb_nodes):
+        # Get shortest distances to museum nodes only
+        total_distance = sum(all_pairs_shortest_paths[airbnb_node][museum_node] for museum_node in museum_nodes)
         
-        if total_distance < min_total_distance:
-            min_total_distance = total_distance
-            optimal_airbnb = airbnb
-    print(f"Time taken to find optimal airbnb using bf: {time.time() - current:.2f}")
+        ssu.assign_distance(airbnb_data, airbnb['id'], total_distance)
+        ssu.assign_crime(airbnb_data, airbnb['id'], ssu.count_crimes_within_radius(rtree_index, airbnb['latitude'], airbnb['longitude'], 500))
+    score_and_rank_airbnbs(airbnb_data)    
+    print(f"Time taken to find optimal airbnb using Floyd-Warshall: {time.time() - current:.2f} seconds")
 
 
 def score_and_rank_airbnbs(airbnb_data, distance_weight=50, crime_weight=40, rating_weight=10, top_n=3):
@@ -136,13 +155,18 @@ if __name__ == "__main__":
         crime_data = load_felony_data(FELONY_FILE_PATH)
         rtree_index = ssu.build_rtree_index(crime_data)
 
-        # Find the optimal Airbnb
+        # Find the optimal Airbnb using Dijkstra's algorithm
         print("\nFinding the optimal Airbnbs using Dijkstra...")
         find_optimal_airbnb_dijkstra(airbnb_data, selected_museums, road_network, rtree_index)
 
+        # Find the optimal Airbnb using Bellman-Ford algorithm
         print("\nFinding the optimal Airbnbs using Bellman-Ford...")
         find_optimal_airbnb_bellman_ford(airbnb_data, selected_museums, road_network, rtree_index)
         
+        # Find the optimal Airbnb using Floyd-Warshall algorithm
+        print("\nFinding the optimal Airbnbs using Floyd-Warshall...")
+        find_optimal_airbnb_floyd_warshall(airbnb_data, selected_museums, road_network, rtree_index)
+
         # Generate the map
         # print("\nGenerating map...")
         # map_object = generate_map(selected_museums, optimal_airbnb, road_network)
